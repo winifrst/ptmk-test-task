@@ -7,9 +7,9 @@ private:
   std::string firstName;
   std::string middleName;
   std::string birthDate;
-  std::string sex;
+  std::string gender;
 
   Employee() = default;
   Employee(std::string lastName, std::string firstName, std::string middleName,
-           std::string birthDate, std::string sex);
+           std::string birthDate, std::string gender);
 };

@@ -1,3 +1,4 @@
+#include "database.h"
 #include <iostream>
 
 // enum class AppMode {
@@ -16,12 +17,14 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  int app_mode = std::stoi(argv[0]);
+  Database db = Database("employees.db");
 
-  switch (app_mode) {
+  int appMode = std::stoi(argv[1]);
+
+  switch (appMode) {
   case 1:
+    db.CreateTable();
     break;
-
   default:
     break;
   }
