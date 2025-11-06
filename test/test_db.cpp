@@ -3,8 +3,10 @@
 #include <filesystem>
 #include <gtest/gtest.h>
 
+namespace fs = std::filesystem;
+
 void remove_test_db(const std::string &db_path) {
-  if (std::filesystem::exists(db_path)) {
+  if (fs::exists(db_path)) {
     std::remove(db_path.c_str());
   }
 }
@@ -15,20 +17,19 @@ TEST(DatabaseTest, CreatesDatabaseFile) {
 
   {
     Database db(test_db);
-    EXPECT_TRUE(std::filesystem::exists(test_db));
+    EXPECT_TRUE(fs::exists(test_db));
   }
 
   remove_test_db(test_db);
 }
 
-TEST(DatabaseTest, CreateTableReturnsTrueOnSuccess) {
+TEST(DatabaseTest, CreateTableDoesNotThrowOnSuccess) {
   const std::string test_db = "test_table.db";
   remove_test_db(test_db);
 
   Database db(test_db);
-  bool result = db.CreateTable();
+  EXPECT_NO_THROW(db.createTable());
 
-  EXPECT_TRUE(result);
   remove_test_db(test_db);
 }
 
@@ -38,11 +39,11 @@ TEST(DatabaseTest, DatabaseFileHasNonZeroSize) {
 
   {
     Database db(test_db);
-    db.CreateTable();
+    EXPECT_NO_THROW(db.createTable());
   }
 
-  EXPECT_TRUE(std::filesystem::exists(test_db));
-  EXPECT_GT(std::filesystem::file_size(test_db), 0);
+  EXPECT_TRUE(fs::exists(test_db));
+  EXPECT_GT(fs::file_size(test_db), 0);
 
   remove_test_db(test_db);
 }
@@ -58,25 +59,36 @@ TEST(DatabaseTest, WorksWithDifferentFilenames) {
     Database db1(test_db1);
     Database db2(test_db2);
 
-    EXPECT_TRUE(db1.CreateTable());
-    EXPECT_TRUE(db2.CreateTable());
+    EXPECT_NO_THROW(db1.createTable());
+    EXPECT_NO_THROW(db2.createTable());
 
-    EXPECT_TRUE(std::filesystem::exists(test_db1));
-    EXPECT_TRUE(std::filesystem::exists(test_db2));
+    EXPECT_TRUE(fs::exists(test_db1));
+    EXPECT_TRUE(fs::exists(test_db2));
   }
 
   remove_test_db(test_db1);
   remove_test_db(test_db2);
 }
 
-TEST(DatabaseTest, TableStructureIsCorrect) {
+TEST(DatabaseTest, CreateTableCanBeCalledTwiceWithoutError) {
   const std::string test_db = "test_structure.db";
   remove_test_db(test_db);
 
   Database db(test_db);
 
-  EXPECT_TRUE(db.CreateTable());
-  EXPECT_TRUE(db.CreateTable());
+  EXPECT_NO_THROW(db.createTable());
+  EXPECT_NO_THROW(db.createTable());
+
+  remove_test_db(test_db);
+}
+
+TEST(DatabaseTest, ThrowsOnInvalidSQL) {
+  const std::string test_db = "test_invalid.db";
+  remove_test_db(test_db);
+
+  Database db(test_db);
+
+  EXPECT_THROW(db.execute("CREAT TABL invalid_syntax("), std::runtime_error);
 
   remove_test_db(test_db);
 }

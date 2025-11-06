@@ -21,11 +21,33 @@ int Employee::getAge() const {
   return age;
 }
 
-void Employee::saveToDatabase(Database &db) const {
-  std::string query = "INSERT INTO employees (last_name, first_name, "
-                      "middle_name, birth_date, gender) VALUES ('" +
-                      lastName + "', '" + firstName + "', '" + middleName +
-                      "', '" + birthDate + "', '" + gender + "');";
+// void Employee::saveToDatabase(Database &db) const {
+//   std::string query = "INSERT INTO employees (last_name, first_name, "
+//                       "middle_name, birth_date, gender) VALUES ('" +
+//                       lastName + "', '" + firstName + "', '" + middleName +
+//                       "', '" + birthDate + "', '" + gender + "');";
 
-  db.Execute(query);
+//   db.execute(query);
+// }
+
+void Employee::saveToDatabase(Database &db) const {
+  std::string query =
+      "INSERT INTO employees "
+      "(last_name, first_name, middle_name, birth_date, gender) "
+      "VALUES ('" +
+      lastName + "', '" + firstName + "', '" + middleName + "', '" + birthDate +
+      "', '" + gender + "');";
+  try {
+    db.execute(query);
+    std::cout << "Added employee: " << lastName << " " << firstName << ", age "
+              << getAge() << std::endl;
+  } catch (const std::runtime_error &e) {
+    std::string msg = e.what();
+    if (msg.find("UNIQUE constraint failed") != std::string::npos) {
+      std::cout << "Employee already exists: " << lastName << " " << firstName
+                << std::endl;
+    } else {
+      throw;
+    }
+  }
 }

@@ -14,7 +14,7 @@ Database::~Database() {
   }
 }
 
-void Database::CreateTable() {
+void Database::createTable() {
   const char *query = "CREATE TABLE IF NOT EXISTS employees ("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                       "last_name TEXT,"
@@ -25,11 +25,11 @@ void Database::CreateTable() {
                       "UNIQUE(last_name, first_name, middle_name, birth_date)"
                       ");";
 
-  Execute(query);
+  execute(query);
   std::cout << "Table 'employees' created successfully." << std::endl;
 }
 
-void Database::Execute(const std::string &query) {
+void Database::execute(const std::string &query) {
   char *errMsg = nullptr;
   int rc = sqlite3_exec(db, query.c_str(), nullptr, nullptr, &errMsg);
   if (rc != SQLITE_OK) {

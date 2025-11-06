@@ -34,7 +34,7 @@ bin/test_%.o: test/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf bin/ $(APP)
+	rm -rf bin/ $(APP) $(TEST_APP) 
 
 run:
 	./$(APP)
