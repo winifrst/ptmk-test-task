@@ -1,8 +1,9 @@
 #pragma once
-#include <string>
+#include "database.h"
+#include <chrono>
 
 class Employee {
-private:
+public:
   std::string lastName;
   std::string firstName;
   std::string middleName;
@@ -12,4 +13,7 @@ private:
   Employee() = default;
   Employee(std::string lastName, std::string firstName, std::string middleName,
            std::string birthDate, std::string gender);
+
+  int getAge() const;
+  void saveToDatabase(Database &db) const;
 };

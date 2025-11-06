@@ -11,5 +11,6 @@ public:
   Database(const std::string &filename);
   ~Database();
 
-  bool CreateTable();
+  void CreateTable();
+  void Execute(const std::string &sql);
 };

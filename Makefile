@@ -1,5 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++20
+# CXXFLAGS = -std=c++20
 LDFLAGS = -lsqlite3
 TEST_LDFLAGS = -lgtest -lgtest_main -lpthread -lsqlite3
 
