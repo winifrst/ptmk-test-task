@@ -1,15 +1,10 @@
-#include "../src/database.h"
-#include "../src/employee.h"
-#include "../src/utils.h"
-#include <cstdio>
-#include <filesystem>
-#include <gtest/gtest.h>
+#include "common.h"
 
-static void remove_test_db(const std::string &db_path) {
-  if (std::filesystem::exists(db_path)) {
-    std::remove(db_path.c_str());
-  }
-}
+// static void remove_test_db(const std::string &db_path) {
+//   if (std::filesystem::exists(db_path)) {
+//     std::remove(db_path.c_str());
+//   }
+// }
 
 TEST(DatabaseTest, ExecuteValidSQL) {
   const std::string test_db = "test_exec_ok.db";

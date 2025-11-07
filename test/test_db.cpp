@@ -1,15 +1,10 @@
-#include "../src/database.h"
-#include <cstdio>
-#include <filesystem>
-#include <gtest/gtest.h>
+#include "common.h"
 
-namespace fs = std::filesystem;
-
-void remove_test_db(const std::string &db_path) {
-  if (fs::exists(db_path)) {
-    std::remove(db_path.c_str());
-  }
-}
+// void remove_test_db(const std::string &db_path) {
+//   if (std::filesystem::exists(db_path)) {
+//     std::remove(db_path.c_str());
+//   }
+// }
 
 TEST(DatabaseTest, CreatesDatabaseFile) {
   const std::string test_db = "test_create.db";
@@ -17,7 +12,7 @@ TEST(DatabaseTest, CreatesDatabaseFile) {
 
   {
     Database db(test_db);
-    EXPECT_TRUE(fs::exists(test_db));
+    EXPECT_TRUE(std::filesystem::exists(test_db));
   }
 
   remove_test_db(test_db);
@@ -42,8 +37,8 @@ TEST(DatabaseTest, DatabaseFileHasNonZeroSize) {
     EXPECT_NO_THROW(db.createTable());
   }
 
-  EXPECT_TRUE(fs::exists(test_db));
-  EXPECT_GT(fs::file_size(test_db), 0);
+  EXPECT_TRUE(std::filesystem::exists(test_db));
+  EXPECT_GT(std::filesystem::file_size(test_db), 0);
 
   remove_test_db(test_db);
 }
@@ -62,8 +57,8 @@ TEST(DatabaseTest, WorksWithDifferentFilenames) {
     EXPECT_NO_THROW(db1.createTable());
     EXPECT_NO_THROW(db2.createTable());
 
-    EXPECT_TRUE(fs::exists(test_db1));
-    EXPECT_TRUE(fs::exists(test_db2));
+    EXPECT_TRUE(std::filesystem::exists(test_db1));
+    EXPECT_TRUE(std::filesystem::exists(test_db2));
   }
 
   remove_test_db(test_db1);
