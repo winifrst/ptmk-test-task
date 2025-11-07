@@ -1,4 +1,6 @@
 #pragma once
+
+#include "employee.h"
 #include <iostream>
 #include <sqlite3.h>
 #include <string>
@@ -13,4 +15,5 @@ public:
 
   void createTable();
   void execute(const std::string &sql);
+  std::vector<Employee> selectAllEmployees();
 };

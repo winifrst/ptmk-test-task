@@ -1,6 +1,7 @@
 #pragma once
-#include "database.h"
 #include <chrono>
+
+class Database;
 
 class Employee {
 public:
@@ -14,11 +15,11 @@ public:
   Employee(std::string lastName, std::string firstName, std::string middleName,
            std::string birthDate, std::string gender);
 
-  std::string getLastName() { return lastName; }
-  std::string getFirstName() { return firstName; }
-  std::string getMiddleName() { return middleName; }
-  std::string getBirthDate() { return birthDate; }
-  std::string getGender() { return gender; }
+  std::string getLastName() const { return lastName; }
+  std::string getFirstName() const { return firstName; }
+  std::string getMiddleName() const { return middleName; }
+  std::string getBirthDate() const { return birthDate; }
+  std::string getGender() const { return gender; }
 
   int getAge() const;
   void saveToDatabase(Database &db) const;

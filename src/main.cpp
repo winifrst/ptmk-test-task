@@ -1,6 +1,8 @@
 #include "database.h"
 #include "employee.h"
 #include "utils.h"
+// #include <iostream>
+#include <vector>
 
 // enum class AppMode {
 //   CREATE_TABLE = 1,
@@ -28,15 +30,37 @@ int main(int argc, char *argv[]) {
   case 1:
     db.createTable();
     break;
+
   case 2: {
+    // db.createTable();
+
     Employee e = parseEmployeeArgs(argc, argv);
     e.saveToDatabase(db);
-    std::cout << "Added employee: " << e.lastName << " " << e.firstName
-              << ", age " << e.getAge() << std::endl;
+    std::cout << "Added employee: " << e.getLastName() << " "
+              << e.getFirstName() << ", age " << e.getAge() << std::endl;
+    break;
+  }
+
+  case 3: {
+    // db.createTable();
+
+    std::vector<Employee> employees = db.selectAllEmployees();
+    if (employees.empty()) {
+      std::cout << "No employees found." << std::endl;
+      break;
+    }
+
+    std::cout << "=== Employee list ===" << std::endl;
+    for (const auto &e : employees) {
+      std::cout << e.getLastName() << " " << e.getFirstName() << " "
+                << e.getMiddleName() << ", " << e.getBirthDate() << ", "
+                << e.getGender() << ", age: " << e.getAge() << std::endl;
+    }
     break;
   }
   default:
-    break;
+    std::cerr << "Unknown mode: " << appMode << std::endl;
+    return 1;
   }
 
   return 0;

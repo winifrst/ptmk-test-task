@@ -1,4 +1,6 @@
 #include "employee.h"
+#include "database.h"
+#include <iostream>
 
 Employee::Employee(std::string last, std::string first, std::string middle,
                    std::string birth, std::string g)
