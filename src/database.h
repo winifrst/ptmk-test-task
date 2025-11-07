@@ -16,4 +16,6 @@ public:
   void createTable();
   void execute(const std::string &sql);
   std::vector<Employee> selectAllEmployees();
+
+  void insertEmployeesPack(const std::vector<Employee> &employees);
 };

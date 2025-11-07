@@ -58,6 +58,13 @@ int main(int argc, char *argv[]) {
     }
     break;
   }
+  case 4: {
+    db.createTable();
+    std::cout << "Generating employees..." << std::endl;
+    auto employees = generateRandomEmployees(1000000, true);
+    db.insertEmployeesPack(employees);
+    break;
+  }
   default:
     std::cerr << "Unknown mode: " << appMode << std::endl;
     return 1;

@@ -71,3 +71,57 @@ std::vector<Employee> Database::selectAllEmployees() {
   sqlite3_finalize(stmt);
   return result;
 }
+
+void Database::insertEmployeesPack(const std::vector<Employee> &employees) {
+  const char *insertSQL =
+      "INSERT OR IGNORE INTO employees "
+      "(last_name, first_name, middle_name, birth_date, gender) "
+      "VALUES (?, ?, ?, ?, ?);";
+
+  sqlite3_exec(db, "BEGIN TRANSACTION;", nullptr, nullptr, nullptr);
+
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(db, insertSQL, -1, &stmt, nullptr) != SQLITE_OK) {
+    throw std::runtime_error("Failed to prepare insert");
+  }
+
+  size_t total = employees.size();
+  size_t current = 0;
+  const int barWidth = 50;
+
+  for (const auto &e : employees) {
+    sqlite3_bind_text(stmt, 1, e.lastName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, e.firstName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, e.middleName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, e.birthDate.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, e.gender.c_str(), -1, SQLITE_TRANSIENT);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+      std::cerr << "Warning: failed to insert one record\n";
+    }
+    sqlite3_reset(stmt);
+
+    current++;
+    float progress = static_cast<float>(current) / total;
+    int pos = static_cast<int>(barWidth * progress);
+
+    std::cout << "[";
+    for (int i = 0; i < barWidth; ++i) {
+      if (i < pos)
+        std::cout << "=";
+      else if (i == pos)
+        std::cout << ">";
+      else
+        std::cout << " ";
+    }
+    std::cout << "] " << static_cast<int>(progress * 100.0) << " %\r";
+    std::cout.flush();
+  }
+
+  std::cout << std::endl;
+
+  sqlite3_finalize(stmt);
+  sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
+
+  std::cout << "Pack insert completed (" << employees.size() << " rows)\n";
+}
