@@ -1,0 +1,7 @@
+*.a
+*.o
+*.db
+/bin/
+/dist/
+/build/
+

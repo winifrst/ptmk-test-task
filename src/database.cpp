@@ -14,6 +14,55 @@ Database::~Database() {
   }
 }
 
+// bool Database::isTableExists(const std::string &tableName) {
+//   std::string query =
+//       "SELECT name FROM sqlite_master WHERE type='table' AND name='" +
+//       tableName + "';";
+// }
+
+// bool Database::isTableExists(const std::string &tableName) {
+//   sqlite3 *db;
+//   sqlite3_stmt *stmt;
+//   bool exists = false;
+
+//   std::string query =
+//       "SELECT name FROM sqlite_master WHERE type='table' AND name='" +
+//       tableName + "';";
+
+//   if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+//   {
+//     std::cerr << "Error preparing query: " << sqlite3_errmsg(db) <<
+//     std::endl; return false;
+//   }
+
+//   if (sqlite3_step(stmt) == SQLITE_ROW) {
+//     exists = true;
+//   }
+
+//   sqlite3_finalize(stmt);
+
+//   return exists;
+// }
+
+bool Database::isTableExists(const std::string &tableName) {
+  sqlite3_stmt *stmt;
+  std::string query =
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='" +
+      tableName + "';";
+
+  if (sqlite3_prepare_v2(this->db, query.c_str(), -1, &stmt, nullptr) !=
+      SQLITE_OK) {
+    std::cerr << "Error preparing query: " << sqlite3_errmsg(this->db)
+              << std::endl;
+    return false;
+  }
+
+  bool exists = (sqlite3_step(stmt) == SQLITE_ROW);
+  sqlite3_finalize(stmt);
+
+  return exists;
+}
+
 void Database::createTable() {
   const char *query = "CREATE TABLE IF NOT EXISTS employees ("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -161,19 +210,26 @@ std::vector<Employee> Database::select(bool is_male, char leadingLetter) {
 }
 
 void Database::optimize() {
-  // const char *indexSQL = "CREATE INDEX IF NOT EXISTS idx_gender_lastname "
-  //                        "ON employees (gender, last_name);";
+  const char *query = "CREATE INDEX IF NOT EXISTS idx_gender_lastname "
+                      "ON employees (gender, last_name);";
 
-  const char *indexSQL =
-      "CREATE INDEX IF NOT EXISTS idx_covering ON employees (gender, "
-      "last_name, first_name, middle_name, birth_date)";
+  // const char *query =
+  //     "CREATE INDEX IF NOT EXISTS idx_covering ON employees (gender, "
+  //     "last_name, first_name, middle_name, birth_date)";
 
   char *errMsg = nullptr;
-  if (sqlite3_exec(db, indexSQL, nullptr, nullptr, &errMsg) != SQLITE_OK) {
+  if (sqlite3_exec(db, query, nullptr, nullptr, &errMsg) != SQLITE_OK) {
     std::string msg = "Failed to create index: ";
     msg += errMsg ? errMsg : "";
     sqlite3_free(errMsg);
     throw std::runtime_error(msg);
   }
   std::cout << "Optimization completed: index created on (gender, last_name)\n";
+}
+
+void Database::dropIndex(const std::string &indexName) {
+  std::string query = "DROP INDEX IF EXISTS " + indexName + ";";
+  if (sqlite3_exec(db, query.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+    throw std::runtime_error("Failed to drop index: " + indexName);
+  }
 }

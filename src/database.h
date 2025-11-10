@@ -14,11 +14,13 @@ public:
   Database(const std::string &filename);
   ~Database();
 
+  bool isTableExists(const std::string &tableName);
   void createTable();
-  void execute(const std::string &sql);
   std::vector<Employee> selectAllEmployees();
 
   void insertEmployeesPack(const std::vector<Employee> &employees);
-  std::vector<Employee> select(bool is_male, char leadingLetter);
   void optimize();
+  void dropIndex(const std::string &indexName);
+  void execute(const std::string &sql);
+  std::vector<Employee> select(bool is_male, char leadingLetter);
 };
