@@ -77,6 +77,18 @@ int main(int argc, char *argv[]) {
     std::cout << "Query execution time: " << duration.count() << " ms\n";
     break;
   }
+  case 6: {
+    db.optimize();
+    auto start = std::chrono::high_resolution_clock::now();
+    auto employees = db.select(0, 'F');
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    std::cout << "Found " << employees.size() << " employees.\n";
+    std::cout << "Query execution time: " << duration.count() << " ms\n";
+    break;
+  }
   default:
     std::cerr << "Unknown mode: " << appMode << std::endl;
     return 1;

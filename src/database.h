@@ -20,4 +20,5 @@ public:
 
   void insertEmployeesPack(const std::vector<Employee> &employees);
   std::vector<Employee> select(bool is_male, char leadingLetter);
+  void optimize();
 };

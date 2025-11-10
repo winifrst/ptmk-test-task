@@ -1,6 +1,9 @@
 # ptmk-test-task
 
-зависимости Установите библиотеку sqlite3
+зависимости 
+gtest
+sqlite3
+
 Если sqlite3 не установлен, установите его:
 
 На Ubuntu/Debian:

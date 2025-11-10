@@ -1,5 +1,4 @@
 #include "database.h"
-#include <vector>
 
 Database::Database(const std::string &filename) {
   if (sqlite3_open(filename.c_str(), &db) != SQLITE_OK) {
@@ -159,4 +158,22 @@ std::vector<Employee> Database::select(bool is_male, char leadingLetter) {
 
   sqlite3_finalize(stmt);
   return result;
+}
+
+void Database::optimize() {
+  // const char *indexSQL = "CREATE INDEX IF NOT EXISTS idx_gender_lastname "
+  //                        "ON employees (gender, last_name);";
+
+  const char *indexSQL =
+      "CREATE INDEX IF NOT EXISTS idx_covering ON employees (gender, "
+      "last_name, first_name, middle_name, birth_date)";
+
+  char *errMsg = nullptr;
+  if (sqlite3_exec(db, indexSQL, nullptr, nullptr, &errMsg) != SQLITE_OK) {
+    std::string msg = "Failed to create index: ";
+    msg += errMsg ? errMsg : "";
+    sqlite3_free(errMsg);
+    throw std::runtime_error(msg);
+  }
+  std::cout << "Optimization completed: index created on (gender, last_name)\n";
 }
