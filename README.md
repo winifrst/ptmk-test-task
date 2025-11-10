@@ -60,14 +60,14 @@
 
 
 ### Структура проекта
-├── src/
-│   ├── main.cpp              # Точка входа
-│   ├── database.cpp/.h       # Работа с SQLite
-│   ├── employee.cpp/.h       # Класс Employee
-│   ├── utils.cpp/.h          # Генерация и парсинг данных
-│   ├── namer.cpp/.h          # Класс для генерации имён
-├── test/
-│   ├── test_database.cpp     # Тесты для Database
-│   ├── test_utils.cpp        # Тесты для генерации данных
-├── Makefile
-└── README.md
+├── src/  
+│   ├── main.cpp              # Точка входа  
+│   ├── database.cpp/.h       # Работа с SQLite  
+│   ├── employee.cpp/.h       # Класс Employee  
+│   ├── utils.cpp/.h          # Генерация и парсинг данных  
+│   ├── namer.cpp/.h          # Класс для генерации имён  
+├── test/  
+│   ├── test_database.cpp     # Тесты для Database  
+│   ├── test_utils.cpp        # Тесты для генерации данных  
+├── Makefile  
+└── README.md  

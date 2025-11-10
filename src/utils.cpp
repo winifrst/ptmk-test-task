@@ -3,6 +3,7 @@
 #include <ctime>
 #include <iostream>
 #include <random>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -26,6 +27,25 @@ Employee parseEmployeeArgs(int argc, char *argv[]) {
 
   if (parts.size() != 3) {
     throw std::runtime_error("FIO must contain 3 words: Last First Middle");
+  }
+
+  std::regex dateRegex(R"((\d{4})-(\d{2})-(\d{2}))");
+  std::smatch match;
+
+  if (!std::regex_match(birthDate, match, dateRegex)) {
+    throw std::runtime_error("Birth date must be in format YYYY-MM-DD");
+  }
+
+  int year = std::stoi(match[1].str());
+  int month = std::stoi(match[2].str());
+  int day = std::stoi(match[3].str());
+
+  if (year < 1900 || month < 1 || month > 12 || day < 1 || day > 31) {
+    throw std::runtime_error("Birth date has invalid year, month or day");
+  }
+
+  if (gender != "Male" && gender != "Female") {
+    throw std::runtime_error("Gender must be either 'Male' or 'Female'");
   }
 
   return Employee(parts[0], parts[1], parts[2], birthDate, gender);
