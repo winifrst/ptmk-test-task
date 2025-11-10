@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sqlite3.h>
 #include <string>
+#include <vector>
 
 class Database {
 private:
@@ -18,4 +19,5 @@ public:
   std::vector<Employee> selectAllEmployees();
 
   void insertEmployeesPack(const std::vector<Employee> &employees);
+  std::vector<Employee> select(bool is_male, char leadingLetter);
 };

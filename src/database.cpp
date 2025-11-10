@@ -125,3 +125,38 @@ void Database::insertEmployeesPack(const std::vector<Employee> &employees) {
 
   std::cout << "Pack insert completed (" << employees.size() << " rows)\n";
 }
+
+std::vector<Employee> Database::select(bool is_male, char leadingLetter) {
+  std::string gender = is_male ? "Male" : "Female";
+
+  std::string query =
+      "SELECT last_name, first_name, middle_name, birth_date, gender "
+      "FROM employees "
+      "WHERE gender = '" +
+      gender + "' AND last_name LIKE '" + leadingLetter + "%';";
+
+  sqlite3_stmt *stmt;
+  if (sqlite3_prepare_v2(this->db, query.c_str(), -1, &stmt, nullptr) !=
+      SQLITE_OK) {
+    throw std::runtime_error("Failed to prepare select query");
+  }
+
+  std::vector<Employee> result;
+  while (sqlite3_step(stmt) == SQLITE_ROW) {
+    std::string last =
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+    std::string first =
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+    std::string middle =
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+    std::string birth =
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3));
+    std::string gender =
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
+
+    result.emplace_back(last, first, middle, birth, gender);
+  }
+
+  sqlite3_finalize(stmt);
+  return result;
+}

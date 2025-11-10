@@ -23,15 +23,6 @@ int Employee::getAge() const {
   return age;
 }
 
-// void Employee::saveToDatabase(Database &db) const {
-//   std::string query = "INSERT INTO employees (last_name, first_name, "
-//                       "middle_name, birth_date, gender) VALUES ('" +
-//                       lastName + "', '" + firstName + "', '" + middleName +
-//                       "', '" + birthDate + "', '" + gender + "');";
-
-//   db.execute(query);
-// }
-
 void Employee::saveToDatabase(Database &db) const {
   std::string query =
       "INSERT INTO employees "

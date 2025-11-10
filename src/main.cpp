@@ -1,7 +1,6 @@
 #include "database.h"
 #include "employee.h"
 #include "utils.h"
-// #include <iostream>
 #include <vector>
 
 // enum class AppMode {
@@ -63,6 +62,19 @@ int main(int argc, char *argv[]) {
     std::cout << "Generating employees..." << std::endl;
     auto employees = generateRandomEmployees(1000000, true);
     db.insertEmployeesPack(employees);
+    break;
+  }
+  case 5: {
+    auto start = std::chrono::high_resolution_clock::now();
+
+    auto employees = db.select(0, 'F');
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    std::cout << "Found " << employees.size() << " employees.\n";
+    std::cout << "Query execution time: " << duration.count() << " ms\n";
     break;
   }
   default:

@@ -1,11 +1,5 @@
 #include "common.h"
 
-// void remove_test_db(const std::string &db_path) {
-//   if (std::filesystem::exists(db_path)) {
-//     std::remove(db_path.c_str());
-//   }
-// }
-
 TEST(DatabaseTest, CreatesDatabaseFile) {
   const std::string test_db = "test_create.db";
   remove_test_db(test_db);
