@@ -1,6 +1,5 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++20
-# CXXFLAGS = -std=c++20
 LDFLAGS = -lsqlite3
 TEST_LDFLAGS = -lgtest -lgtest_main -lpthread -lsqlite3
 
@@ -36,7 +35,7 @@ bin/test_%.o: test/%.cpp
 clean:
 	rm -rf bin/ $(APP) $(TEST_APP) 
 
-run:
-	./$(APP)
+valgrind: test
+	valgrind --tool=memcheck --leak-check=yes ./build/database_tests
 
 .PHONY: all test clean run
